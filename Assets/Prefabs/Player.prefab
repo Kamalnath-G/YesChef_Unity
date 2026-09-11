@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9124387317094209566}
   m_Layer: 0
-  m_Name: ItemHolder
+  m_Name: Object Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -272,7 +272,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &6813832879486992378
 CapsuleCollider:
@@ -294,7 +294,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1
+  m_Height: 1.25
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4481450008273209516
@@ -315,6 +315,7 @@ MonoBehaviour:
   _interactionLayer:
     serializedVersion: 2
     m_Bits: 64
+  _objectAnchor: {fileID: 2203495319429418729}
 --- !u!1 &6707983302363864988
 GameObject:
   m_ObjectHideFlags: 0

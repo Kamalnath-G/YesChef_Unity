@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class CustomerWindowHandler : MonoBehaviour
+public class CustomerWindowHandler : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject _currentOrder;
+    public static Action<float> OnOrderComplete;
+
+    [SerializeField] private GameObject _currentOrderPanel;
     [SerializeField] private TextMeshProUGUI _orderTimer;
 
     bool _isOrderActive = false;
@@ -30,7 +33,7 @@ public class CustomerWindowHandler : MonoBehaviour
         //Populate the current order with the new ingredients.
         foreach (GameObject ingredient in Ingredients)
         {
-            Instantiate(ingredient, _currentOrder.transform);
+            Instantiate(ingredient, _currentOrderPanel.transform);
         }
 
         _isOrderActive = true;
@@ -43,10 +46,9 @@ public class CustomerWindowHandler : MonoBehaviour
     {
         while (_isOrderActive)
         {
-            _orderTimer.text = _currentTime.ToString("F1");
-            yield return new WaitForSeconds(0.1f);
-            _currentTime += 0.1f;
-            _orderTimer.text = "0.0";
+            _orderTimer.text = TimeSpan.FromSeconds(_currentTime).ToString(@"m\:ss");
+            yield return new WaitForSeconds(1f);
+            _currentTime += 1f;
         }
     }
 
@@ -54,12 +56,12 @@ public class CustomerWindowHandler : MonoBehaviour
     {
         _isOrderActive = false;
         _currentTime = 0f;
-        _orderTimer.text = "0.0";
+        _orderTimer.text = "0.00";
     }
 
     void ClearCurrentOrder()
     {
-        foreach (Transform child in _currentOrder.transform)
+        foreach (Transform child in _currentOrderPanel.transform)
         {
             Destroy(child.gameObject);
         }
@@ -70,4 +72,8 @@ public class CustomerWindowHandler : MonoBehaviour
         return _currentTime;
     }
 
+    public void Interact(PlayerController m_PlayerController)
+    {
+        m_PlayerController.DropItem();
+    }
 }
