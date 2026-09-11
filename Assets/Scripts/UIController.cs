@@ -48,7 +48,7 @@ public class UIController : MonoBehaviour
 
     private void UpdateGameTimer(float m_CurrentTime)
     {
-        _gameTimerText.text = $"Time Left: {TimeSpan.FromSeconds(m_CurrentTime).ToString(@"m\:ss")}";
+        _gameTimerText.text = $"{TimeSpan.FromSeconds(m_CurrentTime).ToString(@"m\:ss")}";
     }
     private void OnGameOver()
     {
