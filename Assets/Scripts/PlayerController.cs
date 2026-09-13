@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,9 +7,9 @@ public class PlayerController : MonoBehaviour
     public static event Action<GameObject> OnPlayerInteracted;
 
     [Header("Movement")]
-    PlayerInputActions _inputActions;
+    private PlayerInputActions _inputActions;
     private Vector2 _moveInput;
-    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed = 7f;
     [SerializeField] private float _rotationSpeed = 500f;
 
     [Header("Interaction")]
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         _inputActions.Enable(); //Temp
-        GameManager.OnGameOver += OnGameStarted;
+        GameManager.OnGameStarted += OnGameStarted;
         GameManager.OnGameOver += OnGameOver;
 
         _inputActions.Player.Move.performed += Move_performed;
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         _inputActions.Disable(); //Temp
-        GameManager.OnGameOver -= OnGameStarted;
+        GameManager.OnGameStarted -= OnGameStarted;
         GameManager.OnGameOver -= OnGameOver;
 
         _inputActions.Player.Move.performed -= Move_performed;
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
     private void OnGameStarted()
     {
         _inputActions.Enable();
+        transform.SetLocalPositionAndRotation(Vector3.zero, quaternion.identity);
     }
     private void OnGameOver()
     {
@@ -110,7 +112,7 @@ public class PlayerController : MonoBehaviour
             return IngredientType.None;
         return _heldItem.GetComponent<Ingredient>().ingredientType;
     }
-    void GrabItem(GameObject m_Item)
+    private void GrabItem(GameObject m_Item)
     {
         //Attach the m_Item to the player.
         m_Item.transform.SetParent(_objectAnchor.transform);
@@ -153,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         //Draw a line in front of the player to visualize the interaction distance.
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * _interactionDistance);
+        Gizmos.DrawLine(transform.position, transform.position + (transform.forward * _interactionDistance));
     }
 
 }

@@ -1,68 +1,50 @@
-using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Stove : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Transform _itemPlacementPoint;
-    [SerializeField] private GameObject _timerPanel;
-    [SerializeField] private TextMeshProUGUI _timerText;
-
     [SerializeField] private float _cookingTime = 6f; // Time in seconds to cook the meat
 
-    private void Awake()
+    [SerializeField] private List<CookingSlot> _cookingSlots = new(); // List of cooking slots on the stove
+
+
+    private void Start()
     {
-        _timerPanel.SetActive(false);
-        _timerText.text = _cookingTime.ToString();
+        //safer case handling if the references missed.
+        if (_cookingSlots.Count == 0)
+        {
+            foreach (Transform t in transform)
+                _cookingSlots.Add(t.GetComponent<CookingSlot>());
+        }
     }
 
-    public void Interact(PlayerController m_PlayerController)
+    public void Interact(PlayerController player)
     {
-        //whether there's an item on the stove
-        if (_itemPlacementPoint.childCount > 0)
+        // Try to collect a finished item first
+        foreach (CookingSlot slot in _cookingSlots)
         {
-            //Try to grab the item from the stove.
-            if (m_PlayerController.TryGrabItem(_itemPlacementPoint.GetChild(0).gameObject))
+            if (slot.State == CookingState.Finished)
             {
-                StopTimer(); // Stop the timer if the player grabs the item from the stove
+                if (player.TryGrabItem(slot.CookedItem))
+                {
+                    slot.ClearSlot();
+                    return;
+                }
             }
         }
-        else
+
+        // Otherwise, try to place meat into an empty slot
+        if (player.GetHeldItemType() == IngredientType.Meat)
         {
-            //If the player is already holding an item, place it on the stove instead only if it meat.
-            if (m_PlayerController.GetHeldItemType() == IngredientType.Meat)
+            foreach (CookingSlot slot in _cookingSlots)
             {
-                m_PlayerController.PlaceItem(_itemPlacementPoint);
-                StartCoroutine(StartTimer());
+                if (slot.State == CookingState.Empty)
+                {
+                    player.PlaceItem(slot.ItemPlacementPoint);
+                    slot.StartCooking(_cookingTime);
+                    return;
+                }
             }
         }
-    }
-
-    IEnumerator StartTimer()
-    {
-        _timerPanel.SetActive(true);
-        var currentTime = _cookingTime;
-        while (currentTime > 0)
-        {
-            _timerText.text = Mathf.Ceil(currentTime).ToString();
-            yield return new WaitForSeconds(1f);
-            currentTime--;
-        }
-
-        // Replace the raw meat with cooked meat once cooking time is complete
-
-        Destroy(_itemPlacementPoint.GetChild(0).gameObject);
-        yield return null; // Wait for the next frame to ensure the raw meat is destroyed before instantiating the cooked meat
-
-        var cookedItem = Instantiate(GameManager.Instance.GetIngredient(IngredientType.CookedMeat), _itemPlacementPoint);
-        cookedItem.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        cookedItem.AddComponent<Ingredient>().ingredientType = IngredientType.CookedMeat;
-        StopTimer();
-    }
-
-    void StopTimer()
-    {
-        StopAllCoroutines();
-        _timerPanel.SetActive(false);
     }
 }

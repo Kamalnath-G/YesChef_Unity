@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static event Action OnGameStarted;
     public static event Action OnGameOver;
     public static event Action<float> OnGameTimeChanged;
+    public static event Action<int> OnScoreChanged;
     #endregion
     [Header("Player")]
     [SerializeField] private GameObject _player;
@@ -19,65 +20,41 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _currentTime; // Current time left in the game
 
 
-    [SerializeField] GameObject _vegetablePrefab;
-    [SerializeField] GameObject _cutVegetablePrefab;
-    [SerializeField] GameObject _cheesePrefab;
-    [SerializeField] GameObject _meatPrefab;
-    [SerializeField] GameObject _cookedMeatPrefab;
+    [Header("Score Settings")]
+    private int _score = 0;
+
+    [Header("Ingredient Prefabs")]
+    [SerializeField] private GameObject _vegetablePrefab;
+    [SerializeField] private GameObject _cutVegetablePrefab;
+    [SerializeField] private GameObject _cheesePrefab;
+    [SerializeField] private GameObject _meatPrefab;
+    [SerializeField] private GameObject _cookedMeatPrefab;
 
     private void Awake()
     {
         #region Singleton
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         #endregion
 
 
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void StartGame()
     {
-
-
-
-
-        StartGame();
-    }
-
-    private void OnEnable()
-    {
-        PlayerController.OnPlayerInteracted += OnPlayerInteracted;
-    }
-
-
-    private void OnDisable()
-    {
-        PlayerController.OnPlayerInteracted -= OnPlayerInteracted;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-
-    void StartGame()
-    {
+        _score = 0;
         StartCoroutine(StartGameTimer());
     }
 
 
-    IEnumerator StartGameTimer()
+    private IEnumerator StartGameTimer()
     {
         OnGameStarted?.Invoke(); //Temp Invoke to start the game, can be used to enable player movement and other game logic.
 
@@ -94,14 +71,15 @@ public class GameManager : MonoBehaviour
         OnGameOver?.Invoke();
     }
 
-    private void OnPlayerInteracted(GameObject @object)
+    public void UpdateScore(int m_currentOrderScore)
     {
-        //throw new NotImplementedException();
+        _score += m_currentOrderScore;
+        OnScoreChanged?.Invoke(_score);
     }
 
-    public GameObject GetIngredient(IngredientType ingredientType)
+    public GameObject GetIngredient(IngredientType m_ingredientType)
     {
-        switch (ingredientType)
+        switch (m_ingredientType)
         {
             case IngredientType.Vegetables:
                 return _vegetablePrefab;
@@ -117,4 +95,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RestartGame()
+    {
+        _score = 0;
+        _gameTime = 0;
+
+        StartGame();
+    }
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+    }
+
+    public void StartActionWithDelay(float m_duration, Action m_onTimerComplete)
+    {
+        StartCoroutine(StartActionWithDelayRoutine(m_duration, m_onTimerComplete));
+    }
+
+    private IEnumerator StartActionWithDelayRoutine(float m_duration = 1, Action m_onTimerComplete = null)
+    {
+        yield return new WaitForSeconds(m_duration);
+
+        m_onTimerComplete?.Invoke();
+    }
 }

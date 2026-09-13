@@ -37,10 +37,10 @@ public class Table : MonoBehaviour, IInteractable
         }
     }
 
-    IEnumerator StartTimer()
+    private IEnumerator StartTimer()
     {
         _timerPanel.SetActive(true);
-        var currentTime = _vegetableCutTime;
+        float currentTime = _vegetableCutTime;
         while (currentTime > 0)
         {
             _timerText.text = Mathf.Ceil(currentTime).ToString();
@@ -49,17 +49,17 @@ public class Table : MonoBehaviour, IInteractable
         }
 
         // Replace the raw vegetables with cut vegetables once cutting time is complete
-
-        Destroy(_itemPlacementPoint.GetChild(0).gameObject);
+        if (_itemPlacementPoint.childCount > 0)
+            Destroy(_itemPlacementPoint.GetChild(0).gameObject);
         yield return null; // Wait for the next frame to ensure the raw vegetables are destroyed before instantiating the cut vegetables
 
-        var cutItem = Instantiate(GameManager.Instance.GetIngredient(IngredientType.CutVegetables), _itemPlacementPoint);
+        GameObject cutItem = Instantiate(GameManager.Instance.GetIngredient(IngredientType.CutVegetables), _itemPlacementPoint);
         cutItem.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         cutItem.AddComponent<Ingredient>().ingredientType = IngredientType.CutVegetables;
         StopTimer();
     }
 
-    void StopTimer()
+    private void StopTimer()
     {
         StopAllCoroutines();
         _timerPanel.SetActive(false);
