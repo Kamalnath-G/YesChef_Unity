@@ -86,9 +86,9 @@ public class UIController : MonoBehaviour
     }
     #endregion
 
-    private void UpdateGameTimer(float m_CurrentTime)
+    private void UpdateGameTimer(float m_currentTime)
     {
-        _gameTimerText.text = $"{TimeSpan.FromSeconds(m_CurrentTime).ToString(@"m\:ss")}";
+        _gameTimerText.text = $"{TimeSpan.FromSeconds(m_currentTime).ToString(@"m\:ss")}";
     }
 
     private void OnScoreChanged(int m_score)

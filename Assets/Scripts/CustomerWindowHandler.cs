@@ -36,13 +36,13 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
         _orderTimer.transform.parent.gameObject.SetActive(false);
     }
 
-    public void InitializeNewOrder(List<IngredientType> Ingredients)
+    public void InitializeNewOrder(List<IngredientType> m_ingredients)
     {
         //Clear Previos Order for safer case.
         ClearCurrentOrder();
         //Populate the current order with the new ingredients.
         _currentOrderPanel.SetActive(true);
-        foreach (IngredientType ingredient in Ingredients)
+        foreach (IngredientType ingredient in m_ingredients)
         {
             GameObject _ingredient = Instantiate(_ingredientPrefab, _currentOrderPanel.transform);
             Ingredient ingredientComponent = _ingredient.AddComponent<Ingredient>();
@@ -60,9 +60,9 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
 
     }
 
-    private Sprite GetIngredientIcon(IngredientType type)
+    private Sprite GetIngredientIcon(IngredientType m_type)
     {
-        return type switch
+        return m_type switch
         {
             IngredientType.CutVegetables => _cutVegetablesIcon,
             IngredientType.Cheese => _cheeseIcon,
@@ -106,9 +106,9 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
         return _currentTime;
     }
 
-    public void Interact(PlayerController m_PlayerController)
+    public void Interact(PlayerController m_playerController)
     {
-        IngredientType heldItemType = m_PlayerController.GetHeldItemType();
+        IngredientType heldItemType = m_playerController.GetHeldItemType();
         switch (heldItemType)
         {
             case IngredientType.CutVegetables:
@@ -120,7 +120,7 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
                 {
                     Debug.Log($"Player delivered {heldItemType}.");
 
-                    m_PlayerController.DropItem();
+                    m_playerController.DropItem();
                     foreach (Transform child in _currentOrderPanel.transform)
                     {
                         if (child.TryGetComponent(out Ingredient ingredient) &&

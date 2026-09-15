@@ -16,24 +16,24 @@ public class CookingSlot : MonoBehaviour
 
     public GameObject CookedItem { get; private set; }
 
-    public CookingState State { get; private set; } = CookingState.Empty;
+    public CookingState CookingState { get; private set; } = CookingState.Empty;
 
     private void Awake()
     {
         _timerPanel.SetActive(false);
     }
 
-    public void StartCooking(float cookingTime)
+    public void StartCooking(float m_cookingTime)
     {
-        State = CookingState.Cooking;
-        StartCoroutine(StartTimer(cookingTime));
+        CookingState = CookingState.Cooking;
+        StartCoroutine(StartTimer(m_cookingTime));
     }
 
-    private IEnumerator StartTimer(float cookingTime)
+    private IEnumerator StartTimer(float m_cookingTime)
     {
         _timerPanel.SetActive(true);
 
-        float currentTime = cookingTime;
+        float currentTime = m_cookingTime;
 
         while (currentTime > 0)
         {
@@ -50,14 +50,14 @@ public class CookingSlot : MonoBehaviour
         CookedItem = Instantiate(GameManager.Instance.GetIngredient(IngredientType.CookedMeat), ItemPlacementPoint);
         CookedItem.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         CookedItem.AddComponent<Ingredient>().ingredientType = IngredientType.CookedMeat;
-        State = CookingState.Finished;
+        CookingState = CookingState.Finished;
         _timerPanel.SetActive(false);
     }
 
     public void ClearSlot()
     {
         CookedItem = null;
-        State = CookingState.Empty;
+        CookingState = CookingState.Empty;
         _timerPanel.SetActive(false);
     }
 

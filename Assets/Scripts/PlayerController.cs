@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
     {
         _inputActions = new PlayerInputActions();
     }
-
     private void OnEnable()
     {
         _inputActions.Enable(); //Temp
@@ -37,8 +36,6 @@ public class PlayerController : MonoBehaviour
 
         _inputActions.Player.Interact.performed += Interact_performed;
     }
-
-
     private void OnDisable()
     {
         _inputActions.Disable(); //Temp
@@ -48,7 +45,6 @@ public class PlayerController : MonoBehaviour
         _inputActions.Player.Move.performed -= Move_performed;
         _inputActions.Player.Move.canceled -= Move_canceled;
     }
-
     private void FixedUpdate()
     {
         if (_moveInput == Vector2.zero) return;
@@ -60,7 +56,6 @@ public class PlayerController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, _rotationSpeed * Time.fixedDeltaTime);
     }
-
     #endregion
     private void Move_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -93,13 +88,12 @@ public class PlayerController : MonoBehaviour
     {
         _inputActions.Disable();
     }
-
-    public bool TryGrabItem(GameObject m_Item)
+    public bool TryGrabItem(GameObject m_item)
     {
         if (_heldItem != null)
             return false;
 
-        GrabItem(m_Item);
+        GrabItem(m_item);
         return true;
     }
     public bool IsHoldingItem()
@@ -112,39 +106,39 @@ public class PlayerController : MonoBehaviour
             return IngredientType.None;
         return _heldItem.GetComponent<Ingredient>().ingredientType;
     }
-    private void GrabItem(GameObject m_Item)
+    private void GrabItem(GameObject m_item)
     {
-        //Attach the m_Item to the player.
-        m_Item.transform.SetParent(_objectAnchor.transform);
-        m_Item.transform.localPosition = Vector3.zero;
-        m_Item.transform.localRotation = Quaternion.identity;
-        //Disable the m_Item's collider and rigidbody to prevent physics interactions while held.
-        Collider itemCollider = m_Item.GetComponent<Collider>();
+        //Attach the m_item to the player.
+        m_item.transform.SetParent(_objectAnchor.transform);
+        m_item.transform.localPosition = Vector3.zero;
+        m_item.transform.localRotation = Quaternion.identity;
+        //Disable the m_item's collider and rigidbody to prevent physics interactions while held.
+        Collider itemCollider = m_item.GetComponent<Collider>();
         if (itemCollider != null)
             itemCollider.enabled = false;
-        Rigidbody itemRigidbody = m_Item.GetComponent<Rigidbody>();
+        Rigidbody itemRigidbody = m_item.GetComponent<Rigidbody>();
         if (itemRigidbody != null)
             itemRigidbody.isKinematic = true;
 
-        _heldItem = m_Item;
+        _heldItem = m_item;
     }
 
     public void DropItem()
     {
         if (_heldItem == null)
             return;
-        //Detach the m_Item from the player.
+        //Detach the m_item from the player.
         Destroy(_heldItem);
         _heldItem = null;
     }
 
-    public void PlaceItem(Transform m_Parent)
+    public void PlaceItem(Transform m_parent)
     {
         if (_heldItem == null)
             return;
 
-        //Detach the m_Item from the player.
-        _heldItem.transform.SetParent(m_Parent);
+        //Detach the m_item from the player.
+        _heldItem.transform.SetParent(m_parent);
         _heldItem.transform.localPosition = Vector3.zero;
         _heldItem.transform.localRotation = Quaternion.identity;
         _heldItem = null;
@@ -157,6 +151,7 @@ public class PlayerController : MonoBehaviour
         transform.SetLocalPositionAndRotation(new Vector3(0, 0.5f, 0), Quaternion.identity);
     }
 
+    // Temp
     private void OnDrawGizmos()
     {
         //Draw a line in front of the player to visualize the interaction distance.

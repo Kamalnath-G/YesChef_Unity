@@ -18,14 +18,14 @@ public class Stove : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact(PlayerController player)
+    public void Interact(PlayerController m_player)
     {
         // Try to collect a finished item first
         foreach (CookingSlot slot in _cookingSlots)
         {
-            if (slot.State == CookingState.Finished)
+            if (slot.CookingState == CookingState.Finished)
             {
-                if (player.TryGrabItem(slot.CookedItem))
+                if (m_player.TryGrabItem(slot.CookedItem))
                 {
                     slot.ClearSlot();
                     return;
@@ -34,13 +34,13 @@ public class Stove : MonoBehaviour, IInteractable
         }
 
         // Otherwise, try to place meat into an empty slot
-        if (player.GetHeldItemType() == IngredientType.Meat)
+        if (m_player.GetHeldItemType() == IngredientType.Meat)
         {
             foreach (CookingSlot slot in _cookingSlots)
             {
-                if (slot.State == CookingState.Empty)
+                if (slot.CookingState == CookingState.Empty)
                 {
-                    player.PlaceItem(slot.ItemPlacementPoint);
+                    m_player.PlaceItem(slot.ItemPlacementPoint);
                     slot.StartCooking(_cookingTime);
                     return;
                 }

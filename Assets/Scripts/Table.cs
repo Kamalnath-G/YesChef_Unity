@@ -15,13 +15,13 @@ public class Table : MonoBehaviour, IInteractable
         _timerPanel.SetActive(false);
         _timerText.text = _vegetableCutTime.ToString();
     }
-    public void Interact(PlayerController m_PlayerController)
+    public void Interact(PlayerController m_playerController)
     {
         //whether there's an item on the Table
         if (_itemPlacementPoint.childCount > 0)
         {
             //Try to grab the item from the Table.
-            if (m_PlayerController.TryGrabItem(_itemPlacementPoint.GetChild(0).gameObject))
+            if (m_playerController.TryGrabItem(_itemPlacementPoint.GetChild(0).gameObject))
             {
                 StopTimer(); // Stop the timer if the player grabs the item from the Table
             }
@@ -29,9 +29,9 @@ public class Table : MonoBehaviour, IInteractable
         else
         {
             //If the player is already holding an item, place it on the Table instead only if it Vegetable.
-            if (m_PlayerController.GetHeldItemType() == IngredientType.Vegetables)
+            if (m_playerController.GetHeldItemType() == IngredientType.Vegetables)
             {
-                m_PlayerController.PlaceItem(_itemPlacementPoint);
+                m_playerController.PlaceItem(_itemPlacementPoint);
                 StartCoroutine(StartTimer());
             }
         }

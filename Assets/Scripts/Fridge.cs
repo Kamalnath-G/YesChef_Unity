@@ -28,12 +28,12 @@ public class Fridge : MonoBehaviour, IInteractable
         _ingredientSelectionPanel.SetActive(!_ingredientSelectionPanel.activeSelf);
     }
 
-    public void SelectIngredient(IngredientType ingredientType)
+    public void SelectIngredient(IngredientType m_ingredientType)
     {
         _ingredientSelectionPanel.SetActive(false);
 
-        GameObject ingredient = Instantiate(GameManager.Instance.GetIngredient(ingredientType));
-        ingredient.AddComponent<Ingredient>().ingredientType = ingredientType;
+        GameObject ingredient = Instantiate(GameManager.Instance.GetIngredient(m_ingredientType));
+        ingredient.AddComponent<Ingredient>().ingredientType = m_ingredientType;
         _playerController?.TryGrabItem(ingredient);
     }
 
