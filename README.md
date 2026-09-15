@@ -12,7 +12,7 @@ The player runs a one-person kitchen for a 3-minute session: pull raw ingredient
 
 ## Build
 
-A pre-built Windows version is available here: **[[link](https://drive.google.com/file/d/1cVzNesYmEQMWTh9iFGh7kyMxdNDhvAAx/view?usp=sharing)]**
+A pre-built Windows version is available here: **[https://drive.google.com/file/d/1cVzNesYmEQMWTh9iFGh7kyMxdNDhvAAx/view?usp=sharing]**
 
 To play it without Unity:
 
