@@ -136,7 +136,6 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
                     {
                         Debug.Log("Order completed!");
                         _currentOrderScore -= (int)MathF.Floor(_currentTime);
-                        _currentOrderScore = Mathf.Max(0, _currentOrderScore);
                         GameManager.Instance.UpdateScore(_currentOrderScore);
                         DisplayScore();
                         OnOrderComplete?.Invoke(this);
