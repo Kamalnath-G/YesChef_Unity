@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     }
     private void OnEnable()
     {
-        _inputActions.Enable(); //Temp
         GameManager.OnGameStarted += OnGameStarted;
         GameManager.OnGameOver += OnGameOver;
 
@@ -38,7 +37,6 @@ public class PlayerController : MonoBehaviour
     }
     private void OnDisable()
     {
-        _inputActions.Disable(); //Temp
         GameManager.OnGameStarted -= OnGameStarted;
         GameManager.OnGameOver -= OnGameOver;
 
@@ -151,7 +149,6 @@ public class PlayerController : MonoBehaviour
         transform.SetLocalPositionAndRotation(new Vector3(0, 0.5f, 0), Quaternion.identity);
     }
 
-    // Temp
     private void OnDrawGizmos()
     {
         //Draw a line in front of the player to visualize the interaction distance.

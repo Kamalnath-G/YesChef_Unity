@@ -45,12 +45,6 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
         #endregion
-
-#if UNITY_EDITOR
-        _gameTime = 30f;
-#else
-        _gameTime = 180f;
-#endif
     }
 
     public void StartGame()
