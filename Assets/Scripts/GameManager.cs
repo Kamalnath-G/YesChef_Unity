@@ -5,20 +5,23 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-
     #region Events
     public static event Action OnGameStarted;
     public static event Action OnGameOver;
     public static event Action<float> OnGameTimeChanged;
     public static event Action<int> OnScoreChanged;
     #endregion
-    [Header("Player")]
-    [SerializeField] private GameObject _player;
+
+    [Header("Player & Other Managers")]
+    [SerializeField] private PlayerController _player;
+    [SerializeField] private OrderManager _orderManager;
+    [SerializeField] private Stove _stove;
+    [SerializeField] private Table _table;
+    [SerializeField] private Fridge _fridge;
 
     [Header("Game Timer Settings")]
     [SerializeField] private float _gameTime = 180f; // Total game time in seconds (3 minutes)
     [SerializeField] private float _currentTime; // Current time left in the game
-
 
     [Header("Score Settings")]
     private int _score = 0;
@@ -40,24 +43,26 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         #endregion
 
-
+#if UNITY_EDITOR
+        _gameTime = 30f;
+#else
+        _gameTime = 180f;
+#endif
     }
 
     public void StartGame()
     {
         _score = 0;
+
+        OnGameStarted?.Invoke();
         StartCoroutine(StartGameTimer());
     }
 
-
     private IEnumerator StartGameTimer()
     {
-        OnGameStarted?.Invoke(); //Temp Invoke to start the game, can be used to enable player movement and other game logic.
-
         _currentTime = _gameTime;
         while (_currentTime > 0)
         {
@@ -75,6 +80,11 @@ public class GameManager : MonoBehaviour
     {
         _score += m_currentOrderScore;
         OnScoreChanged?.Invoke(_score);
+    }
+
+    public int GetScore()
+    {
+        return _score;
     }
 
     public GameObject GetIngredient(IngredientType m_ingredientType)
@@ -97,10 +107,27 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        Time.timeScale = 1f;
+
+        StopAllCoroutines();
+
         _score = 0;
-        _gameTime = 0;
+        _currentTime = _gameTime;
+
+        ResetGameplay();
+
+        OnScoreChanged?.Invoke(_score);
+        OnGameTimeChanged?.Invoke(_currentTime);
 
         StartGame();
+    }
+    private void ResetGameplay()
+    {
+        _player.ResetPlayer();
+        _orderManager.ResetOrders();
+        _stove.ResetStoves();
+        _fridge.ResetFridge();
+        _table.ResetTable();
     }
 
     public void QuitGame()

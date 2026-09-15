@@ -294,7 +294,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 1.25
+  m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4481450008273209516
@@ -309,8 +309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fde11608ecb2a9749938395f4194ae49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManager
-  _moveSpeed: 5
-  _rotationSpeed: 500
+  _moveSpeed: 7
+  _rotationSpeed: 750
   _interactionDistance: 3
   _interactionLayer:
     serializedVersion: 2

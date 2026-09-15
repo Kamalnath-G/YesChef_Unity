@@ -47,4 +47,13 @@ public class Stove : MonoBehaviour, IInteractable
             }
         }
     }
+
+    public void ResetStoves()
+    {
+        foreach (CookingSlot slot in _cookingSlots)
+        {
+            slot.ResetStove();
+        }
+    }
+
 }

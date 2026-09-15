@@ -64,4 +64,13 @@ public class Table : MonoBehaviour, IInteractable
         StopAllCoroutines();
         _timerPanel.SetActive(false);
     }
+
+    public void ResetTable()
+    {
+        StopTimer();
+        //Clear any object in the Table
+        if (_itemPlacementPoint.childCount > 0)
+            Destroy(_itemPlacementPoint.GetChild(0).gameObject);
+    }
+
 }

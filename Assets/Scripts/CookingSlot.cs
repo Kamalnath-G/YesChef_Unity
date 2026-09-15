@@ -60,4 +60,14 @@ public class CookingSlot : MonoBehaviour
         State = CookingState.Empty;
         _timerPanel.SetActive(false);
     }
+
+    public void ResetStove()
+    {
+        StopAllCoroutines();
+        ClearSlot();
+        //Clear any object in the stove
+        if (ItemPlacementPoint.childCount > 0)
+            Destroy(ItemPlacementPoint.GetChild(0).gameObject);
+    }
+
 }

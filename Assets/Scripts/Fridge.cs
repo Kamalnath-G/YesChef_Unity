@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class Fridge : MonoBehaviour, IInteractable
 {
-    [SerializeField] GameObject _ingredientSelectionPanel;
+    [SerializeField] private GameObject _ingredientSelectionPanel;
 
-    [SerializeField] Button _vegetablesButton;
-    [SerializeField] Button _cheeseButton;
-    [SerializeField] Button _meatButton;
+    [SerializeField] private Button _vegetablesButton;
+    [SerializeField] private Button _cheeseButton;
+    [SerializeField] private Button _meatButton;
 
-    PlayerController _playerController;
+    private PlayerController _playerController;
 
     private void Awake()
     {
@@ -32,10 +32,14 @@ public class Fridge : MonoBehaviour, IInteractable
     {
         _ingredientSelectionPanel.SetActive(false);
 
-        var ingredient = Instantiate(GameManager.Instance.GetIngredient(ingredientType));
+        GameObject ingredient = Instantiate(GameManager.Instance.GetIngredient(ingredientType));
         ingredient.AddComponent<Ingredient>().ingredientType = ingredientType;
         _playerController?.TryGrabItem(ingredient);
     }
 
+    public void ResetFridge()
+    {
+        _ingredientSelectionPanel.SetActive(false);
+    }
 
 }

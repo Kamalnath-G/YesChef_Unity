@@ -150,6 +150,12 @@ public class PlayerController : MonoBehaviour
         _heldItem = null;
     }
 
+    public void ResetPlayer()
+    {
+        DropItem();
+        _moveInput = Vector2.zero;
+        transform.SetLocalPositionAndRotation(new Vector3(0, 0.5f, 0), Quaternion.identity);
+    }
 
     private void OnDrawGizmos()
     {

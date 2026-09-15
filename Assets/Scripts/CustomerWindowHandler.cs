@@ -226,4 +226,13 @@ public class CustomerWindowHandler : MonoBehaviour, IInteractable
         _orderScoreText.alpha = 0;
     }
 
+    public void ResetOrder()
+    {
+        StopAllCoroutines();
+        _isOrderActive = false;
+        _currentTime = 0f;
+
+        ClearCurrentOrder();
+    }
+
 }

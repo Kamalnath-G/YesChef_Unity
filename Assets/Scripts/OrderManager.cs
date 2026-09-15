@@ -51,4 +51,13 @@ public class OrderManager : MonoBehaviour
             customer.InitializeNewOrder(GenerateOrder());
         }
     }
+
+    public void ResetOrders()
+    {
+        StopAllCoroutines();
+        foreach (CustomerWindowHandler customer in _customerWindowHandler)
+        {
+            customer.ResetOrder();
+        }
+    }
 }

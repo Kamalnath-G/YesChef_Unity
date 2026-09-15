@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ButtonTextHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ButtonTextHover : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     [SerializeField] private TMP_Text _text;
 
@@ -21,9 +21,14 @@ public class ButtonTextHover : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         _text.color = _hoverColor;
     }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        _text.color = _normalColor;
+    }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         _text.color = _normalColor;
     }
+
 }

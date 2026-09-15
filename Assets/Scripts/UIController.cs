@@ -34,7 +34,6 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _gameOverHighScoreText;
 
     #region Unity Functions
-
     private void Awake()
     {
         #region Singleton
@@ -69,20 +68,22 @@ public class UIController : MonoBehaviour
         _gameOverRestartButton.onClick.AddListener(OnRestartButtonClicked);
         _gameOverQuitButton.onClick.AddListener(OnQuitButtonClicked);
     }
-
+    private void Start()
+    {
+        UpdateHighScoreUI();
+    }
     private void OnEnable()
     {
         GameManager.OnScoreChanged += OnScoreChanged;
         GameManager.OnGameTimeChanged += UpdateGameTimer;
         GameManager.OnGameOver += OnGameOver;
     }
-
     private void OnDisable()
     {
+        GameManager.OnScoreChanged -= OnScoreChanged;
         GameManager.OnGameTimeChanged -= UpdateGameTimer;
         GameManager.OnGameOver -= OnGameOver;
     }
-
     #endregion
 
     private void UpdateGameTimer(float m_CurrentTime)
@@ -92,34 +93,48 @@ public class UIController : MonoBehaviour
 
     private void OnScoreChanged(int m_score)
     {
-        _scoreText.text = "Score: " + m_score; //Temp
+        _scoreText.text = "Score: " + m_score;
+    }
+    private void UpdateHighScoreUI()
+    {
+        int highScore = SaveManager.Instance.LoadHighScore();
+        _highScoreText.text = "High Score: " + highScore;
+        _gameOverHighScoreText.text = "High Score: " + highScore;
+        _mainMenuHighScoreText.text = "High Score: " + highScore;
     }
 
     private void OnGameOver()
     {
-        _gameTimerText.text = "Game Over!"; //Temp
+        _gameOverPanel.SetActive(true);
+        int score = GameManager.Instance.GetScore();
+        _gameOverScoreText.text = "Your Score: " + score;
+        SaveManager.Instance.SaveHighScore();
+        UpdateHighScoreUI();
     }
 
     private void OnPlayButtonClicked()
     {
-        _mainMenuPanel.gameObject.SetActive(false);
+        _mainMenuPanel.SetActive(false);
         GameManager.Instance.StartGame();
     }
     private void OnPauseButtonClicked()
     {
         Time.timeScale = 0f;
+        _pausePanel.SetActive(true);
     }
-
     private void OnResumeButtonClicked()
     {
+        _pausePanel.SetActive(false);
         Time.timeScale = 1f;
     }
     private void OnRestartButtonClicked()
     {
         GameManager.Instance.RestartGame();
+        Time.timeScale = 1f;
+        _mainMenuPanel.SetActive(false);
+        _pausePanel.SetActive(false);
+        _gameOverPanel.SetActive(false);
     }
-
-
     private void OnQuitButtonClicked()
     {
         GameManager.Instance.QuitGame();
