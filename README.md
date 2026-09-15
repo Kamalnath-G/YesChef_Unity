@@ -28,7 +28,8 @@ OnScoreChanged
 UIController subscribes to these and is the only class that touches UI. Gameplay systems never reach into UI directly. This keeps the presentation layer swappable (uGUI today, UI Toolkit later) and prevents the common failure mode where score and timer logic slowly leak into UI scripts.
 
 Orders:
-OrderManager handles generation and lifecycle — rolling 2- or 3-ingredient orders, assigning them to windows, and the 5-second respawn delay. CustomerWindowHandler owns everything about a single window: its current order, its own timer, delivery validation, per-order scoring, and score feedback.
+OrderManager handles generation and lifecycle — rolling 2- or 3-ingredient orders, assigning them to windows, and the 5-second respawn delay. 
+CustomerWindowHandler owns everything about a single window: its current order, its own timer, delivery validation, per-order scoring, and score feedback.
 The split matters because each window's timer runs independently. Centralising per-window timing in OrderManager would mean one class tracking four parallel timers and four sets of remaining-ingredient state — the kind of thing that works with four windows and breaks at eight.
 
 Stove:
@@ -47,8 +48,6 @@ The spec left several interaction details open. These are the calls I made:
 Raycast interaction over trigger volumes. A forward raycast means the player must face a station to use it, which makes interaction unambiguous when the fridge and a customer window are close together. Trigger volumes would have been simpler but produce "which one did I just interact with?" moments near corners.
 
 Fridge opens a selection UI. The alternative was three separate pickup points on the refrigerator. A selection panel keeps the fridge a single interactable and scales cleanly if the ingredient list grows past three.
-
-Unwanted ingredients stay in hand. Per the spec, delivering an ingredient the current order doesn't need leaves it in hand rather than consuming it. The trash exists as the deliberate discard path, so a mistake costs time but isn't unrecoverable.
 
 Separate representations for gameplay and UI. IngredientType is the shared identifier; 3D prefabs represent ingredients in the world, dedicated sprites represent them in order UI. Order UI therefore doesn't depend on prefab setup.
 
